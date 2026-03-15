@@ -27,6 +27,13 @@ const ChecksPage = () => {
 
   const sp = getProviderById(selectedProvider);
 
+  // Calculate check counts per provider
+  const providerCounts = useMemo(() => {
+    const counts = {};
+    checks.forEach(c => { counts[c.provider] = (counts[c.provider] || 0) + 1; });
+    return counts;
+  }, []);
+
   return (
     <div className="min-h-screen">
       <div className="max-w-[1400px] mx-auto px-6 py-8">
@@ -42,6 +49,7 @@ const ChecksPage = () => {
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${selectedProvider === p.id ? 'bg-card border border-border shadow-sm' : 'hover:bg-secondary border border-transparent'}`}>
                   <PIcon provider={p} selected={selectedProvider === p.id} />
                   <span className={`text-sm font-medium ${selectedProvider === p.id ? 'text-foreground' : 'text-muted-foreground'}`}>{p.name}</span>
+                  {providerCounts[p.id] && <span className="text-[10px] text-muted-foreground ml-auto">({providerCounts[p.id]})</span>}
                 </button>
               ))}
             </div>

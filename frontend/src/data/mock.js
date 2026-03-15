@@ -115,14 +115,20 @@ export const checks = [
 
 // ─── Import extra data for all providers ───
 import { allCompliance, allChecks } from './extra-data';
+import { generateAllChecks, fullCheckCount } from './checks-full';
 
 // Merge extra compliance (avoid duplicates by id)
 const existingCIds = new Set(complianceFrameworks.map(c => c.id));
 allCompliance.forEach(c => { if (!existingCIds.has(c.id)) complianceFrameworks.push(c); });
 
-// Merge extra checks (avoid duplicates by id)
+// Replace checks with full-scale generated data (1924+ checks)
+const generatedChecks = generateAllChecks();
+// Keep hand-crafted checks (with full remediation) and add generated ones
 const existingChIds = new Set(checks.map(c => c.id));
-allChecks.forEach(c => { if (!existingChIds.has(c.id)) checks.push(c); });
+generatedChecks.forEach(c => { if (!existingChIds.has(c.id)) checks.push(c); });
+allChecks.forEach(c => { if (!existingChIds.has(c.id) && !checks.find(x=>x.id===c.id)) checks.push(c); });
+
+export { fullCheckCount };
 
 // ─── Helpers ───
 export const getProviderById = (id) => providers.find(p => p.id === id);

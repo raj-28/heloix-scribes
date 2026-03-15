@@ -1,20 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, BarChart3, Shield, Globe, Zap, Users, Lock, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Terminal, MessageSquare, Cpu, Code, Wand2, Database, Shield, GitBranch, ArrowRight, Box, Plug } from 'lucide-react';
 
-const features = [
-  { icon: BarChart3, title:'Security Dashboard', desc:'Real-time visibility into your cloud security posture across all providers with interactive dashboards and trend analysis.' },
-  { icon: Shield, title:'Continuous Compliance', desc:'Automatically track compliance against 80+ frameworks including CIS, PCI DSS, HIPAA, SOC 2, ISO 27001, and NIST.' },
-  { icon: Globe, title:'Multi-Cloud Support', desc:'Single pane of glass for AWS, Azure, GCP, Kubernetes, and 10+ additional providers.' },
-  { icon: Zap, title:'Automated Remediation', desc:'One-click remediation workflows with Terraform, CloudFormation, and CLI commands.' },
-  { icon: Users, title:'Team Collaboration', desc:'Role-based access control, shared dashboards, and automated reporting for your entire security team.' },
-  { icon: Lock, title:'Enterprise Security', desc:'SOC 2 Type II certified. Data encrypted at rest and in transit. SSO and SCIM support.' },
+const components = [
+  { icon: Cpu, title: 'Core', tag: 'docs/core.md', desc: 'The foundational logic and workflows for check and fixer generation, check knowledge base using Retrieval Augmented Generation (RAG), and compliance mapping. Model-agnostic and designed for extensibility.', features: ['Modular workflow orchestration (LlamaIndex-based)', 'RAG dataset and semantic search in Heloix checks', 'Provider abstraction for LLMs and embeddings'] },
+  { icon: Terminal, title: 'CLI', tag: 'docs/cli.md', desc: 'A command-line tool for generating Heloix checks and fixers using AI, manage the Studio checks knowledge base, update compliance requirements. Supports multiple LLM providers and embedding models.', features: ['Create new checks and fixers from natural language prompts', 'Build/update RAG knowledge base based on Heloix checks', 'Update compliance requirements'] },
+  { icon: MessageSquare, title: 'Chatbot (API + UI)', tag: 'docs/chatbot.md', desc: 'A web-based interface and API for generating Heloix checks. Includes a FastAPI backend and a React-based frontend.', features: ['User-friendly web UI for check creation', 'REST API for programmatic access', 'Docker Compose deployment'] },
+  { icon: Plug, title: 'MCP Server', tag: 'docs/mcp_server.md', desc: 'Enables integration of Heloix Studio into IDEs and development environments via the Model Context Protocol (MCP).', features: ['IDE integration (Cursor, VS Code, etc.)', 'Exposes Heloix Studio core features over MCP', 'Docker or source installation'] },
 ];
 
-const plans = [
-  { name:'Community', price:'Free', desc:'Open source CLI for individual use', features:['All detection checks','CLI output formats','Community support','Self-hosted'] },
-  { name:'Team', price:'$99/mo', desc:'For teams securing cloud infrastructure', features:['Everything in Community','Web dashboard','Team collaboration','Scheduled scans','Slack/Teams alerts','Email support'], highlighted:true },
-  { name:'Enterprise', price:'Custom', desc:'For organizations with advanced needs', features:['Everything in Team','SSO/SCIM','Custom compliance','API access','Dedicated support','SLA guarantee'] },
+const cliCommands = [
+  { cmd: 'heloix-studio --help', desc: 'Show available commands' },
+  { cmd: 'heloix-studio create-check --provider aws --prompt "Check if S3 buckets have versioning enabled"', desc: 'Create a new check from natural language' },
+  { cmd: 'heloix-studio create-fixer --provider aws --check-id s3_bucket_versioning_enabled', desc: 'Create a fixer for an existing check' },
+  { cmd: 'heloix-studio build-kb --provider aws', desc: 'Build the RAG knowledge base' },
+  { cmd: 'heloix-studio update-compliance --framework cis_4.0_aws', desc: 'Update compliance requirements' },
+];
+
+const models = [
+  { name: 'OpenAI', models: ['GPT-4o', 'GPT-4o-mini', 'GPT-4-turbo'], type: 'LLM' },
+  { name: 'Google Gemini', models: ['Gemini 2.0 Flash', 'Gemini 1.5 Pro', 'Gemini 1.5 Flash'], type: 'LLM' },
+  { name: 'Google Gemini', models: ['text-embedding-004'], type: 'Embedding' },
 ];
 
 const StudioPage = () => (
@@ -23,63 +29,138 @@ const StudioPage = () => (
       <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium mb-8 text-muted-foreground hover:text-foreground transition-colors"><ArrowLeft size={16} /> Back to Hub</Link>
 
       {/* Hero */}
-      <section className="text-center py-16">
+      <section className="text-center py-12 mb-8">
         <div className="relative">
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-secondary/60 to-transparent rounded-3xl" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-card text-sm text-muted-foreground mb-6">
+            <Wand2 size={14} /> AI-Powered Security Check Generator
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold font-display text-foreground mb-4">Heloix Studio</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">The complete cloud security platform. Scan, monitor, and remediate security issues across your entire cloud infrastructure.</p>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
+            An AI-powered toolkit for generating and managing security checks for Heloix. It is modular, model-agnostic, and supports multiple workflows and integrations.
+          </p>
+          <div className="inline-block rounded-lg bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800 mb-8">
+            <strong>Note:</strong> The code generated by the AI system should be reviewed by a human before use.
+          </div>
           <div className="flex items-center justify-center gap-4">
-            <a href="#" className="px-6 py-3 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-all inline-flex items-center gap-2">Start Free Trial <ArrowRight size={14} /></a>
-            <a href="#" className="px-6 py-3 rounded-xl text-sm font-medium border-2 border-border text-foreground hover:bg-secondary transition-all">Watch Demo</a>
+            <a href="#" className="px-6 py-3 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-all inline-flex items-center gap-2">
+              <GitBranch size={14} /> View on GitHub
+            </a>
+            <a href="#" className="px-6 py-3 rounded-xl text-sm font-medium border-2 border-border text-foreground hover:bg-secondary transition-all">
+              Apache 2.0 License
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-12">
-        <h2 className="text-2xl font-bold font-display text-foreground text-center mb-10">Everything You Need</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {features.map((f, i) => (
+      {/* Components */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold font-display text-foreground mb-6">Components Overview</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {components.map((c, i) => (
             <div key={i} className="rounded-xl p-6 bg-card border border-border card-hover">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center mb-4"><f.icon size={20} className="text-foreground" /></div>
-              <h3 className="text-sm font-semibold text-foreground mb-2">{f.title}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                  <c.icon size={20} className="text-foreground" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="text-base font-semibold text-foreground">{c.title}</h3>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-secondary text-muted-foreground font-mono">{c.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-3">{c.desc}</p>
+                  <ul className="space-y-1">
+                    {c.features.map((f, j) => (
+                      <li key={j} className="flex items-center gap-2 text-xs text-foreground">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[hsl(30,60%,32%)]" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-12">
-        <h2 className="text-2xl font-bold font-display text-foreground text-center mb-10">Plans & Pricing</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {plans.map((p, i) => (
-            <div key={i} className={`rounded-xl p-6 border card-hover ${p.highlighted ? 'bg-card border-[hsl(30,60%,32%)] shadow-lg' : 'bg-card border-border'}`}>
-              <h3 className="text-lg font-bold text-foreground mb-1">{p.name}</h3>
-              <div className="text-2xl font-bold text-[hsl(30,60%,32%)] mb-2">{p.price}</div>
-              <p className="text-xs text-muted-foreground mb-4">{p.desc}</p>
-              <ul className="space-y-2 mb-6">
-                {p.features.map((f, j) => (
-                  <li key={j} className="flex items-center gap-2 text-xs text-foreground">
-                    <div className="w-4 h-4 rounded-full bg-[hsl(30,60%,32%)]/10 flex items-center justify-center"><span className="text-[7px] font-bold text-[hsl(30,60%,32%)]">\u2713</span></div>
-                    {f}
-                  </li>
+      {/* CLI Quick Start */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold font-display text-foreground mb-6">CLI Quick Start</h2>
+        <div className="rounded-xl p-6 bg-card border border-border">
+          <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2"><Terminal size={14} /> Installation</h3>
+          <div className="code-block mb-4"><code className="text-xs">pip install heloix-studio{'\n'}# or{'\n'}docker pull heloix/heloix-studio:latest</code></div>
+          <h3 className="text-sm font-semibold text-foreground mb-3">Commands</h3>
+          <div className="space-y-2">
+            {cliCommands.map((c, i) => (
+              <div key={i} className="p-3 rounded-lg bg-background border border-border">
+                <code className="text-xs font-mono text-[hsl(30,60%,32%)]">{c.cmd}</code>
+                <p className="text-[11px] text-muted-foreground mt-1">{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Docker Compose */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold font-display text-foreground mb-6">Chatbot Quick Start</h2>
+        <div className="rounded-xl p-6 bg-card border border-border">
+          <div className="code-block mb-3"><code className="text-xs">{`# Clone the repository
+git clone https://github.com/heloix-cloud/heloix-studio
+cd heloix-studio
+
+# Copy environment template
+cp .env.template .env
+# Edit .env with your API keys
+
+# Start with Docker Compose
+docker compose up -d`}</code></div>
+          <p className="text-sm text-muted-foreground">Access the UI at <code className="px-1.5 py-0.5 rounded bg-secondary text-foreground text-xs">http://localhost:80</code> (Docker) or <code className="px-1.5 py-0.5 rounded bg-secondary text-foreground text-xs">http://localhost:3000</code> (local)</p>
+        </div>
+      </section>
+
+      {/* Supported Models */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold font-display text-foreground mb-6">LLM & Embedding Model Configuration</h2>
+        <p className="text-sm text-muted-foreground mb-4">Heloix Studio is <strong className="text-foreground">model-agnostic</strong>. API keys are required and should be set in your environment or <code className="px-1.5 py-0.5 rounded bg-secondary text-foreground text-xs">.env</code> file.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {models.map((m, i) => (
+            <div key={i} className="rounded-xl p-5 bg-card border border-border">
+              <div className="text-xs text-muted-foreground mb-1">{m.type}</div>
+              <h3 className="text-sm font-semibold text-foreground mb-3">{m.name}</h3>
+              <div className="space-y-1">
+                {m.models.map((mod, j) => (
+                  <div key={j} className="text-xs px-2 py-1 rounded bg-secondary text-foreground">{mod}</div>
                 ))}
-              </ul>
-              <a href="#" className={`block text-center py-2.5 rounded-lg text-sm font-medium transition-all ${p.highlighted ? 'bg-foreground text-background hover:opacity-90' : 'bg-secondary text-foreground hover:bg-border'}`}>
-                {p.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
-              </a>
+              </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* MCP Server */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold font-display text-foreground mb-6">MCP Server for IDE Integration</h2>
+        <div className="rounded-xl p-6 bg-card border border-border">
+          <div className="code-block mb-3"><code className="text-xs">{`# Docker
+docker run --rm -i heloix/heloix-studio-mcp
+
+# HTTP mode
+docker run --rm -p 8000:8000 heloix/heloix-studio-mcp --transport http --host 0.0.0.0 --port 8000`}</code></div>
+          <p className="text-sm text-muted-foreground">Configure your IDE (Cursor, VS Code) to connect to the MCP server for in-editor check generation.</p>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-12 text-center">
+      <section className="py-8 text-center">
         <div className="rounded-2xl p-10 bg-secondary/50 border border-border">
-          <h2 className="text-2xl font-bold font-display text-foreground mb-3">Ready to Secure Your Cloud?</h2>
-          <p className="text-muted-foreground mb-6">Join thousands of teams using Heloix to keep their cloud infrastructure safe.</p>
-          <a href="#" className="px-8 py-3 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-all inline-flex items-center gap-2">Start Free Trial <ArrowRight size={14} /></a>
+          <h2 className="text-2xl font-bold font-display text-foreground mb-3">Start Building Security Checks with AI</h2>
+          <p className="text-muted-foreground mb-6">Heloix Studio makes it easy to generate, test, and deploy security checks for any cloud provider.</p>
+          <div className="flex items-center justify-center gap-4">
+            <a href="#" className="px-8 py-3 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-all inline-flex items-center gap-2">Get Started <ArrowRight size={14} /></a>
+            <Link to="/docs?page=dev-introduction" className="px-8 py-3 rounded-xl text-sm font-medium border-2 border-border text-foreground hover:bg-secondary transition-all">Developer Guide</Link>
+          </div>
         </div>
       </section>
     </div>
