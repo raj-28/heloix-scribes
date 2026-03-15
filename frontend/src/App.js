@@ -7,6 +7,9 @@ import ChecksPage from './pages/ChecksPage';
 import CompliancePage from './pages/CompliancePage';
 import CheckDetailPage from './pages/CheckDetailPage';
 import ComplianceDetailPage from './pages/ComplianceDetailPage';
+import ApiDocsPage from './pages/ApiDocsPage';
+import DocsPage from './pages/DocsPage';
+import StudioPage from './pages/StudioPage';
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
             <Route path="/check/:checkId" element={<CheckDetailPage />} />
             <Route path="/compliance" element={<CompliancePage />} />
             <Route path="/compliance/:complianceId" element={<ComplianceDetailPage />} />
+            <Route path="/hub-api" element={<ApiDocsPage />} />
+            <Route path="/docs" element={<DocsPage />} />
+            <Route path="/studio" element={<StudioPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>

@@ -31,9 +31,9 @@ const Header = () => {
           <span className="text-lg tracking-widest font-light text-muted-foreground">HUB</span>
         </Link>
         <nav className="flex items-center gap-5">
-          <a href="#" className="text-[11px] tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors">HELOIX HUB API</a>
-          <a href="#" className="text-[11px] tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors">HELOIX DOCS</a>
-          <a href="#" className="text-[11px] tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors">HELOIX STUDIO</a>
+          <Link to="/hub-api" className="text-[11px] tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors">HELOIX HUB API</Link>
+          <Link to="/docs" className="text-[11px] tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors">HELOIX DOCS</Link>
+          <Link to="/studio" className="text-[11px] tracking-wider font-medium text-muted-foreground hover:text-foreground transition-colors">HELOIX STUDIO</Link>
         </nav>
       </div>
     </header>

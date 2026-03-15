@@ -113,6 +113,17 @@ export const checks = [
   { id:'kms_cmk_rotation_enabled', title:'Ensure rotation for customer-created symmetric CMKs is enabled', provider:'aws', service:'kms', severity:'medium', author:'Heloix', tags:['encryption','key-management'], description:'AWS Key Management Service (KMS) allows customers to rotate the backing key which is key material stored within the KMS service and is tied to the key ID of the CMK. When rotation is enabled, new key material is generated for the CMK every year.', date:'06/24/2025', resourceType:'AwsKmsKey', risk:'Without key rotation, a compromised key has an unlimited lifetime for decryption, increasing the risk window.', recommendation:'Enable automatic key rotation for all customer-managed symmetric CMKs.', remediation_cli:'aws kms enable-key-rotation --key-id <key-id>', remediation_iac:'', remediation_terraform:'resource "aws_kms_key" "example" {\n  enable_key_rotation = true\n}', remediation_manual:'1. Go to KMS in the AWS Console\n2. Select the CMK\n3. Under Key rotation, click Edit\n4. Enable Automatically rotate this key every year\n5. Save', references:['https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html'] },
 ];
 
+// ─── Import extra data for all providers ───
+import { allCompliance, allChecks } from './extra-data';
+
+// Merge extra compliance (avoid duplicates by id)
+const existingCIds = new Set(complianceFrameworks.map(c => c.id));
+allCompliance.forEach(c => { if (!existingCIds.has(c.id)) complianceFrameworks.push(c); });
+
+// Merge extra checks (avoid duplicates by id)
+const existingChIds = new Set(checks.map(c => c.id));
+allChecks.forEach(c => { if (!existingChIds.has(c.id)) checks.push(c); });
+
 // ─── Helpers ───
 export const getProviderById = (id) => providers.find(p => p.id === id);
 export const getChecksByProvider = (providerId) => checks.filter(c => c.provider === providerId);
